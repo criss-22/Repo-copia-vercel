@@ -33,6 +33,8 @@ app.use('/api/misvis', MsVsPEroutes);
 
 app.use('/api/incidencias', incidenciasroutes);
 
+app.use('/api/terminos', terminosroutes);
+
 
 app.get('/', (req, res)=>{
     res.send("Esta es mi primera vez se gentil")
