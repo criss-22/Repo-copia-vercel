@@ -4,11 +4,11 @@ import dotenv from 'dotenv';
 import cors from 'cors'; // IMPORTANTE Importar 
 import gruposroutes from './routes/gruposroutes.js'
 import productosroutes from './routes/productos.routes.js'
+import MsVsPEroutes from './routes/misvisroutes.js'
+import incidenciasroutes from './routes/incidencias.routes.js'
 
 
-
-
-//crear el objeto de express para nuestra alicacion
+//crear el objeto de express para nuestra alicacion 
 const app=express();
 
 //configuramos el acceso al archivo , .env
@@ -28,6 +28,10 @@ app.use(express.json())
 app.use('/api/grupos', gruposroutes)
 
 app.use('/api/productos', productosroutes);
+
+app.use('/api/misvis', MsVsPEroutes);
+
+app.use('/api/incidencias', incidenciasroutes);
 
 
 app.get('/', (req, res)=>{

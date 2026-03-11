@@ -3,14 +3,49 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as validar from '../utils/validaciones.js';
 
+//export const obtenerEmpleados = async (req, res) => {
+  //try {
+    //const grupos = await grupoModelo.obtenerEmpleados();
+    //res.status(200).json(grupos);
+  //} catch (error) {
+    //res.status(500).json({ error: error.message });
+  //}
+//};
+
 export const obtenerEmpleados = async (req, res) => {
   try {
-    const grupos = await grupoModelo.obtenerEmpleados();
-    res.status(200).json(grupos);
+    let { limit, start } = req.query;
+
+  if (limit === undefined || limit === "") limit = "10"; //si es indefinido o vacio se asigna un valor por defecto
+    if (start === undefined || start === "") start = "0"; 
+    
+   
+    const limitNumber = parseInt(limit); //convertir a numero entero
+    const startNumber = parseInt(start);
+
+    if (isNaN(limitNumber) || isNaN(startNumber) || //validacion si es numero
+      limitNumber < 0 || startNumber < 0) { //si es nmayor a 0
+      return res.status(400).json({
+        message: "limit y start deben ser números válidos mayores o iguales a 0",
+      });
+    }
+    const resultado= await grupoModelo.obtenerEmpleados(limitNumber, startNumber);
+    
+    
+    res.status(200).json({
+      message: "Empleados obtenidos correctamente",
+      limit: limitNumber,
+      start: startNumber,
+      total: resultado.length,
+      data: resultado,
+    });
+ 
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 export const crearEmpleado = async (req, res) => {
   try {
@@ -163,4 +198,83 @@ export const login = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error en el proceso de login' });
     }
+};
+
+
+
+
+export const obtenerDepartamentos = async (req, res) => {
+
+  try {
+
+    const resultado = await grupoModelo.obtenerDepartamentos();
+
+    res.status(200).json({
+      message: "Departamentos obtenidos correctamente",
+      total: resultado.length,
+      data: resultado
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+};
+
+
+// ===============================
+// OBTENER PUESTOS
+// ===============================
+export const obtenerPuestos = async (req, res) => {
+
+  try {
+
+    const resultado = await grupoModelo.obtenerPuestos();
+
+    res.status(200).json({
+      message: "Puestos obtenidos correctamente",
+      total: resultado.length,
+      data: resultado
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+};
+
+
+// ===============================
+// OBTENER PUESTO Y DEPARTAMENTO
+// DE UN EMPLEADO
+// ===============================
+export const obtenerPuestoDepartamentoEmpleado = async (req, res) => {
+
+  try {
+
+    const { id } = req.body;
+
+    if (!validar.esEnteroPositivo(id)) {
+      return res.status(400).json({
+        message: "El id debe ser un número entero positivo"
+      });
+    }
+
+    const resultado = await grupoModelo.obtenerPuestoDepartamentoEmpleado(id);
+
+    if (resultado.length === 0) {
+      return res.status(404).json({
+        message: "Empleado no encontrado"
+      });
+    }
+
+    res.status(200).json({
+      message: "Información obtenida correctamente",
+      data: resultado[0]
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
 };

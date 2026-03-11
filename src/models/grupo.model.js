@@ -3,14 +3,14 @@ import db from '../config/db.js'
 // pormesas es cuando o
 
 //SELECT
-export const obtenerEmpleados = async ()=> {
+export const obtenerEmpleados = async (limit, start) => {
     const [rows] = await db.query(`SELECT e.Id_Empleado, e.Nombre, e.Apellido_Paterno, e.Apellido_Materno, 
                    e.Correo, e.Telefono, d.Departamento, p.Puesto, t.Usuario
             FROM empleados e
             INNER JOIN departamentos d ON e.Id_Departamento = d.Id_Departamento
             INNER JOIN puestos p ON e.Id_Puesto = p.Id_Puesto
             INNER JOIN tipo_usuario t ON e.Id_Tipo_Usuario = t.Id_Tipo_Usuario
-            ORDER BY e.Id_Empleado ASC`)
+            ORDER BY e.Id_Empleado ASC  LIMIT ? OFFSET ?`, [Number(limit), Number(start)]);
     return rows
 }
 
@@ -85,4 +85,52 @@ export const findUsuarioByEmail = async (email) => {
         [email]
     );
     return rows[0];
+};
+
+
+export const obtenerDepartamentos = async () => {
+
+  const [rows] = await db.query(`
+        SELECT * FROM departamentos
+    `);
+
+  return rows;
+};
+
+
+// ===============================
+// OBTENER PUESTOS
+// ===============================
+export const obtenerPuestos = async () => {
+
+  const [rows] = await db.query(`
+        SELECT * FROM puestos
+    `);
+
+  return rows;
+};
+
+
+// ===============================
+// OBTENER PUESTO Y DEPARTAMENTO
+// DE UN EMPLEADO
+// ===============================
+export const obtenerPuestoDepartamentoEmpleado = async (idEmpleado) => {
+
+  const [rows] = await db.query(`
+        SELECT 
+        e.Nombre,
+        e.Apellido_Paterno,
+        e.Apellido_Materno,
+        p.Puesto,
+        d.Departamento
+        FROM empleados e
+        LEFT JOIN puestos p 
+        ON e.Id_Puesto = p.Id_Puesto
+        LEFT JOIN departamentos d 
+        ON d.Id_Departamento = e.Id_Departamento
+        WHERE e.Id_Empleado = ?
+    `,[Number(idEmpleado)]);
+
+  return rows;
 };
