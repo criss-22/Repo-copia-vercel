@@ -1,9 +1,13 @@
 import db from '../config/db.js';
 
 export const obtenerTerminosActivos = async () => {
-  // Llamamos al procedimiento que mencionas para obtener título y contenido
-    const [rows] = await db.query('CALL CrearNuevoTermino()');
-
-  // MySQL devuelve los resultados dentro de un array anidado cuando se usa CALL
-    return rows[0][0]; 
+    const [rows] = await db.query(`
+        SELECT titulo, contenido 
+        FROM terminos_condiciones 
+        WHERE activo = 1 
+        ORDER BY id DESC 
+        LIMIT 1
+    `);
+    
+    return rows[0]; 
 };
