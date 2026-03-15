@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as perfilCtrl from '../controllers/perfil.controladores.js';
-import { verificarToken } from '../middlewares/auth.js'; // Ajusta la ruta a tu middleware
+// import { verificarToken } from '../middlewares/auth.js'; // Ajusta la ruta a tu middleware
 
 const router = Router();
 

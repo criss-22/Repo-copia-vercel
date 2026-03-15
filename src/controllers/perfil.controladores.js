@@ -2,7 +2,7 @@ import * as perfilModelo from '../models/perfil.model.js';
 import bcrypt from 'bcryptjs';
 import * as validar from '../utils/validaciones.js';
 
-
+// Controlador para OBTENER el perfil
 export const obtenerPerfil = async (req, res) => {
   try {
     const { id } = req.params;
