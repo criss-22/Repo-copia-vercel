@@ -3,10 +3,10 @@ import * as terminosCtrl from '../controllers/terminos.controladores.js';
 
 const router = Router();
 
-// GET /api/terminos → todos los registros
 router.get('/', terminosCtrl.obtenerTerminosYCondiciones);
+router.put('/', terminosCtrl.actualizarTerminos);
 
-// Opcional: si prefieres una ruta específica para el activo
+// Opcional si se prefiee una ruta específica para el activo
 // router.get('/activo', terminosCtrl.obtenerTerminosActivo); 
 // (pero tendrías que crear la función en el controlador)
 
